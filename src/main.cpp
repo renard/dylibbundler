@@ -38,7 +38,7 @@ using namespace io;
  *
  */
 
-const string VERSION = "0.1";
+const string VERSION = "0.1.1";
 
 #include "Library.h"
 #include "Utils.h"
@@ -153,6 +153,8 @@ int main (int argc, char * const argv[])
 		exit(0);
 	}
 	
+	bool read_paths = false;
+	
 	// parse the file until end reached
 	while(xml && xml->read())
 	{
@@ -160,12 +162,28 @@ int main (int argc, char * const argv[])
 		{
 			// read <x> text between opening and closing tags </x>
 			case EXN_TEXT:
-				if (!strcmp("search_path", xml->getNodeName())) search_path = xml->getNodeData();
+				
+				if(read_paths)
+				{
+					search_path = xml->getNodeData();
+					std::cout << "found search path : " << search_path << std::endl;
+				}
 				break;
 				
-			// read tag attributes
+			case EXN_ELEMENT_END:
+			{
+				if (!strcmp("search_path", xml->getNodeName()))
+				{
+					read_paths = false;
+				}
+			}
 			case EXN_ELEMENT:
 			{
+				if (!strcmp("search_path", xml->getNodeName()))
+				{
+					read_paths = true;
+				}
+				
 				if (!strcmp("library", xml->getNodeName()))
 				{
 					// common

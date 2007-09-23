@@ -32,7 +32,7 @@ In the terminal, cd to the main directory of dylibbundler and type "make". You c
 
 <h3>Feedback / Contact </h3>
 <blockquote>
-You can contact me at <A href="mailto:auria@users.sourceforge.net">auria@users.sourceforge.net</A>
+You can contact me at <A href="mailto:auria@users.sourceforge.net">auria@users.sourceforge.net</A> or on the <A href="http://sourceforge.net/projects/macdylibbundler">sourceforge project page</A>
 </blockquote>
 
 <!----------------------------------------------------- Terminal Flags --------------------------------------------------------->
@@ -102,7 +102,7 @@ may be included, seperated with colons (:).
 
 You must create one &lt;library/&gt; tag for each library you need to include in your app. (Hint : <i>otool -L (file)</i> will allow
 you to see on what libs (file) depends. Unless you installed things in non-standard paths, usually those in /usr/lib/ were pre-installed
-with OS X). This tag must have an attribute <i>name</i> that ill be used to identify it and name its file. Usually you will want to use the
+with OS X). This tag must have an attribute <i>name</i> that will be used to identify it and name its file. Usually you will want to use the
 form "lib<i>name</i>" without any version in it. If this library depends on any library that does not come with OS X, you will need to
 bundle it too by creating an entry for it. You can specify that the current library depends on another entry of the config file with the
 attribute <i>dependencies</i>. The content of <i>dependencies</i> is the <i>name</i> attribute of the entries this library depends
@@ -112,7 +112,7 @@ dependencies betweem libraries, otherwise your program will not work on other co
 <blockquote> &lt;library name="libSDL_image" dependencies="libjpeg:libpng" ... &gt; </blockquote> <i>You will need
 entries named "libjpeg" and "libpng"</i>
 
-If you wish to use file lists, you will use 3 atribtues : <i>path</i>, <i>file</i>, <i>symlinks</i>.
+If you wish to use file lists, you will use 3 attributes : <i>path</i>, <i>file</i>, <i>symlinks</i>.
 <i>path</i> is here the library if located (e.g. /usr/local/lib/), <i>file</i> is the name of the library file, <i>symlinks</i> is a
 list sepered with colons (:) of all symlinks to this library file that exist.
 
@@ -124,7 +124,7 @@ may contain multiple keywords seperated with colons (:). It will automatically s
 library files and symlinks. Be careful that your description is precise enough so that it does
 not match libraries with similar names.
 
-<blockquote> &lt;library name="libfoo"  start_wih="libfoo" ends_with=".dylib" doesnt_contain="foobar:food"/&gt;
+<blockquote> &lt;library name="libfoo"  starts_with="libfoo" ends_with=".dylib" doesnt_contain="foobar:food"/&gt;
 <i>would select libfoo files but not libfoobar nor libfood</i></blockquote>
 
 
