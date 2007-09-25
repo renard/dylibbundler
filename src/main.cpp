@@ -38,7 +38,7 @@ using namespace io;
  *
  */
 
-const string VERSION = "0.1.1";
+const string VERSION = "0.1.2";
 
 #include "Library.h"
 #include "Utils.h"
@@ -176,6 +176,7 @@ int main (int argc, char * const argv[])
 				{
 					read_paths = false;
 				}
+				break;
 			}
 			case EXN_ELEMENT:
 			{
