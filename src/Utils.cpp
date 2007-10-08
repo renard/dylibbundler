@@ -109,6 +109,7 @@ void copyFile(string from, string to, bool override)
 		if(fileExists( to.c_str() ))
 		{
 			cerr << "\n\nError : File " << to.c_str() << " already exists. Remove it or enable overriding." << endl;
+			exit(1);
 		}
 	}
 	

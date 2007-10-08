@@ -38,7 +38,7 @@ using namespace io;
  *
  */
 
-const string VERSION = "0.1.2";
+const string VERSION = "0.1.3";
 
 #include "Library.h"
 #include "Utils.h"
@@ -147,10 +147,10 @@ int main (int argc, char * const argv[])
 	cout << "* reading config file..." << endl;
 	IrrXMLReader* xml = createIrrXMLReader(config.c_str());
 	
-	if(xml == NULL)
+	if(xml == NULL or xml == 0)
 	{
 		cerr << "\n\nError : Cannot open config file" << endl;
-		exit(0);
+		exit(1);
 	}
 	
 	bool read_paths = false;
@@ -222,6 +222,8 @@ int main (int argc, char * const argv[])
 							exit(1);
 						}
 						
+						cout << "LIB " << name << endl;
+						
 						search = new Library_FileSearch(name);
 						if(starts_with != NULL) search -> startsWith(starts_with);
 						if(ends_with != NULL) search -> endsWith(ends_with);
@@ -274,58 +276,6 @@ int main (int argc, char * const argv[])
 	
 	if(fixLibs_bool) fixLibs(destfolder, create_dir, overwrite_files, overwrite_dir);
 	if(fixEx) fixExecutable(executable);
-	
-	
-	/*
-	addPrefix("/usr/local/lib/");
-	
-	{
-		Library_FileSearch* cond = new Library_FileSearch("libglib");
-		cond -> startsWith("lib");
-		cond -> endsWith(".dylib");
-		cond -> contains("glib");
-		cond -> doesntContain("glibmm");
-		pushBackSearch(cond);
-	}
-	
-	{
-		Library_FileSearch* cond = new Library_FileSearch("libglibmm");
-		cond -> startsWith("lib");
-		cond -> endsWith(".dylib");
-		cond -> contains("glibmm");
-		cond -> doesntContain("extra");
-		cond -> addDependencies("libglib");
-		pushBackSearch(cond);
-	}
-	
-	{
-		Library_FileSearch* cond = new Library_FileSearch("libglibmm_generate_extra_defs");
-		cond -> startsWith("lib");
-		cond -> endsWith(".dylib");
-		cond -> contains("glibmm_generate_extra_defs");
-		pushBackSearch(cond);
-	}
-
-	{
-		Library_FileSearch* cond = new Library_FileSearch("libsdl");
-		cond -> startsWith("lib");
-		cond -> endsWith(".dylib");
-		cond -> contains("SDL");
-		cond -> doesntContain("SDL_");
-		pushBackSearch(cond);
-	}
-	
-	{
-		Library_FileList* cond = new Library_FileList("libgmodule");
-		cond -> addLibName("/usr/local/lib/","libgmodule-2.0.0.1200.13.dylib");
-		cond -> addSymlinkName("/usr/local/lib/","libgmodule-2.0.dylib");
-		cond -> addSymlinkName("/usr/local/lib/","libgmodule-2.0.0.dylib");
-		pushBackSearch(cond);
-	}
-	*/
-	//startSearch();
-	//fixLibs("./libs", true /*create*/, true /*override files*/, false /*override dir*/);
-	//fixExecutable("./wormux");
 	
     return 0;
 }

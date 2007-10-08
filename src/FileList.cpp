@@ -41,8 +41,8 @@ void readFilesInPath(string path)
 	
 	if(libs_dir == false)
 	{
-		cout << ( string("\n\nError : cannot open directory ") + path ).c_str() << endl;
-		exit(0);
+		cerr << ( string("\n\nError : cannot open directory ") + path ).c_str() << endl;
+		exit(1);
 	}
 	
 	struct dirent* entry;

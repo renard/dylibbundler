@@ -1,8 +1,10 @@
 <html>
 <body>
 
+
 <center>
 <h2>mac dylib bundler</h2>
+
 </center>
 
 <h3>About</h3>
@@ -24,6 +26,7 @@ It usually involves 2 actions :
 <li/>Fixing the executable file so that it is aware of the new location of its dependencies.
 </ul>
 </blockquote>
+
 
 <h3>Installation</h3>
 <blockquote>
@@ -50,7 +53,7 @@ Here is a list of flags you can pass to dylibbundler on the terminal.<br/><br/>
 and will expect to find them there. This command will tell it the new location of bundled dylibs)</blockquote>
 
 -l, --fix-libraries
-<blockquote>Copies libaries to a local directory, fixes their iternal name so that they are aware of their new location,
+<blockquote>Copies libaries to a local directory, fixes their internal name so that they are aware of their new location,
 fixes dependencies where bundled libraries depend on each other. If this option is not passed, no libraries will be prepared for distribution.</blockquote>
 
 -c, --config (config file)
@@ -84,6 +87,18 @@ dylibbundler -cd -od -l -x ./HelloWorld.app/Contents/MacOS/helloworld -d ./Hello
 <h3>Writing config files</h3>
 <blockquote>
 Dylibbundler uses XML config files to resolve dependencies. By default, it searches for a file named <i>dylibbundler.config</i>.
+
+<br/>
+The file skeleton looks like this:<br/>
+<blockquote>
+&lt;?xml version="1.0"?&gt;<br>
+&lt;config&gt;<br>
+<br>
+&lt;/config&gt;
+</blockquote>
+
+and you will insert stuff in the middle.<br/>
+
 <br/>There are 2 ways to specify libraries:
 <ul>
 <li/><b>File lists</b> This simply involves writing a list of library files, including their symlinks, by entry.
@@ -97,7 +112,7 @@ it may not know wich one to use and you'll need to edit the config file to expli
 </ul>
 
 If you wish to use library file search from criteria, your config file must contain a &lt;search_path&gt; tag with library location(s) in it. Multiple paths
-may be included, seperated with colons (:).
+may be included, seperated with colons (:). It can be placed inside &lt;config&gt; as well as outside of it.
 <blockquote> &lt;search_path&gt;/usr/local/lib/:/usr/lib/&lt;search_path/&gt; </blockquote>
 
 You must create one &lt;library/&gt; tag for each library you need to include in your app. (Hint : <i>otool -L (file)</i> will allow
