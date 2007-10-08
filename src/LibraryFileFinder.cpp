@@ -169,6 +169,11 @@ LibraryFileFinder::LibraryFileFinder(const char* query_name)
 {
 	name = string(query_name);
 }
+void LibraryFileFinder::setPath(const char* path_arg)
+{
+	path = string(path_arg);
+}
+
 Library_FileList::Library_FileList(const char* query_name) : LibraryFileFinder(query_name) {}
 Library_FileSearch::Library_FileSearch(const char* query_name) : LibraryFileFinder(query_name) {}
 
@@ -200,7 +205,7 @@ void LibraryFileFinder::findAndFixYourInterlibDeps()
 			if( lib_file_lists[s] -> name.compare(name) == 0 )
 			{
 				// found it
-				lib_file_searches[s] -> fixLibThatDependsOnYou(this);
+				lib_file_lists[s] -> fixLibThatDependsOnYou(this);
 				success = true;
 				break;
 			};
@@ -281,22 +286,48 @@ void LibraryFileFinder::fixLibThatDependsOnYou(LibraryFileFinder* lib)
 }
 
 // ------------ file lists -----------
-void Library_FileList::addLibName(const char* path_arg, const char* file)
+void Library_FileList::addLibName(const char* file)
 {
-	string path = string(path_arg);
-	if( path[ path.size()-1 ] != '/' ) path += "/";
-	libraries.push_back( Library( path, string(file) ) );
+	string path_to_use = string(path);
+	
+	// if absolute path is not specified, use search paths instead
+	if(path.size() == 0)
+	{
+		cout << prefixes.size() << " paths in search paths" << endl;
+		for(int n=0; n<prefixes.size(); n++)
+		{
+			cout << "checking for existance of " << prefixes[n] + string(file) << endl;
+			if( fileExists( (prefixes[n] + string(file)).c_str() ) )
+			{
+				path_to_use = prefixes[n];
+				break;
+			}
+		}
+		if(path_to_use.size() == 0)
+		{
+			cerr << "\n\nError : Found no file named " << file << " in given search paths" << endl;
+			exit(1);
+		}
+	}
+	else
+	{
+		path_to_use = path;
+		if( path_to_use[ path_to_use.size()-1 ] != '/' ) path_to_use += "/";
+	}
+	
+	libraries.push_back( Library( path_to_use, string(file) ) );
 }
-void Library_FileList::addSymlinkName(const char* path_arg, const char* names)
+void Library_FileList::addSymlinkName(const char* names)
 {
-	string path = string(path_arg);
-	if( path[ path.size()-1 ] != '/' ) path += "/";
+	string path_to_use = path;
+	if( path_to_use[ path_to_use.size()-1 ] != '/' ) path_to_use += "/";
 	
 	vector<string> symlinks_tokens;
 	tokenize( string(names), ":", &symlinks_tokens );
-	
+
 	for(int n=0; n<symlinks_tokens.size(); n++)
-		symlinks.push_back( Library( path, symlinks_tokens[n] ) );
+	symlinks.push_back( Library( "" /* the main lib has the path, not necessary for symlinks */,
+							 symlinks_tokens[n] ) );
 }
 
 // ------------ library search -----------

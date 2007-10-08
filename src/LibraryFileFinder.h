@@ -31,10 +31,13 @@ protected:
 	vector<Library> libraries;
 	vector<Library> symlinks;
 	vector<string> dependencies;
+	string path;
 public:
 
 	void addDependencies(const char* depend); // accepts multiple entries separated by ':'. Does not trim spaces.
 		
+	void setPath(const char* path);
+	
 	// used internally
 	string name;
 	LibraryFileFinder(const char* query_name);	
@@ -50,8 +53,8 @@ class Library_FileList : public LibraryFileFinder
 public:
 		
 	Library_FileList(const char* query_name);
-	void addLibName(const char* path, const char* file);
-	void addSymlinkName(const char* path, const char* file); // accepts multiple entries separated by ':'. Does not trim spaces.
+	void addLibName(const char* file);
+	void addSymlinkName(const char* file); // accepts multiple entries separated by ':'. Does not trim spaces.
 };
 
 class Library_FileSearch : public LibraryFileFinder

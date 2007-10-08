@@ -25,6 +25,15 @@ using namespace irr;
 using namespace io;
 
 /*
+make it possible to fix this:
+ 
+ Error while searching for libraries of rule libgettext : multiple files were found that match criteria.
+ (/usr/local/lib/libgettextlib-0.16.dylib /opt/gtk/lib/libgettextlib-0.16.dylib )
+ Please refine the criteria to fix the ambiguity.
+ 
+ */
+
+/*
  *
  * -x, --fix-executable <executable file>
  * -l, --fix-libraries
@@ -38,7 +47,7 @@ using namespace io;
  *
  */
 
-const string VERSION = "0.1.3";
+const string VERSION = "0.2";
 
 #include "Library.h"
 #include "Utils.h"
@@ -166,6 +175,7 @@ int main (int argc, char * const argv[])
 				if(read_paths)
 				{
 					search_path = xml->getNodeData();
+					addPrefix(search_path);
 					std::cout << "found search path : " << search_path << std::endl;
 				}
 				break;
@@ -208,7 +218,6 @@ int main (int argc, char * const argv[])
 						exit(1);
 					}
 					
-
 					bool file_search = (file == NULL);
 					
 					Library_FileSearch* search;
@@ -225,18 +234,21 @@ int main (int argc, char * const argv[])
 						cout << "LIB " << name << endl;
 						
 						search = new Library_FileSearch(name);
+						if(path != NULL) search -> setPath(path);
 						if(starts_with != NULL) search -> startsWith(starts_with);
 						if(ends_with != NULL) search -> endsWith(ends_with);
 						if(contains != NULL) search -> contains(contains);
 						if(doesnt_contain != NULL) search -> doesntContain(doesnt_contain);
 						
 						if(dependencies != NULL) search -> addDependencies( dependencies );
+						
 						pushBackSearch(search);
 						
 						using_searches = true;
 					}
 					else
 					{
+
 						list = new Library_FileList(name);
 						
 						if(file == NULL)
@@ -244,16 +256,13 @@ int main (int argc, char * const argv[])
 							cerr << "\n\nError : not enough information provided in config file for where/how to find library " << name  << endl;
 							exit(1);
 						}
-						if(path == NULL)
-						{
-							cerr << "\n\nError : not enough information provided in config file for where/how to find library " << name  << endl;
-							exit(1);
-						}
 						
-						list -> addLibName(path, file);
-						if(symlinks != NULL) list -> addSymlinkName(path, symlinks);
+						if(path != NULL) list -> setPath(path);
+						list -> addLibName(file);
+						if(symlinks != NULL) list -> addSymlinkName(symlinks);
 						
-						list -> addDependencies( dependencies );
+						if(dependencies != NULL) list -> addDependencies( dependencies );
+						
 						pushBackList(list);
 					}
 
@@ -268,7 +277,6 @@ int main (int argc, char * const argv[])
 	delete xml;
 	
 	cout << "* reading libraries..." << endl;
-	addPrefix(search_path);
 	
 	if(using_searches) startSearch();
 	

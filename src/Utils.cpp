@@ -101,6 +101,7 @@ void fixLibIdentity(Library& lib)
 
 }
 
+
 void copyFile(string from, string to, bool override)
 {
 	
@@ -115,12 +116,23 @@ void copyFile(string from, string to, bool override)
 	
 	string override_permission = string(override ? "-f " : "-n ");
 		
+	// copy file to local directory
 	string command = string("cp ") + override_permission + from + string(" ") + to;
 	cout << command.c_str() << endl;
-		
+	
 	if( system( command.c_str() ) != 0 )
 	{
 		cerr << "\n\nError : An error occured while trying to copy file " << from << " to " << to << endl;
+		exit(1);
+	}
+	
+	// give it write permission
+	string command2 = string("chmod +w ") + to;
+	cout << command2.c_str() << endl;
+	
+	if( system( command2.c_str() ) != 0 )
+	{
+		cerr << "\n\nError : An error occured while trying to set write permissions on file " << to << endl;
 		exit(1);
 	}
 }

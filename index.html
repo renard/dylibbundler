@@ -2,6 +2,7 @@
 <body>
 
 
+
 <center>
 <h2>mac dylib bundler</h2>
 
@@ -26,6 +27,7 @@ It usually involves 2 actions :
 <li/>Fixing the executable file so that it is aware of the new location of its dependencies.
 </ul>
 </blockquote>
+
 
 
 <h3>Installation</h3>
@@ -111,7 +113,7 @@ However if you have multiple versions of the same library installed on your comp
 it may not know wich one to use and you'll need to edit the config file to explicitely exclude one or more.
 </ul>
 
-If you wish to use library file search from criteria, your config file must contain a &lt;search_path&gt; tag with library location(s) in it. Multiple paths
+Your config file may also contain a &lt;search_path&gt; tag with library location(s) in it. Multiple paths
 may be included, seperated with colons (:). It can be placed inside &lt;config&gt; as well as outside of it.
 <blockquote> &lt;search_path&gt;/usr/local/lib/:/usr/lib/&lt;search_path/&gt; </blockquote>
 
@@ -125,25 +127,25 @@ upon, and you can include many dependencies by seperating them with colons (:). 
 dependencies betweem libraries, otherwise your program will not work on other computers than yours (once again : use the otool tip.)
 
 <blockquote> &lt;library name="libSDL_image" dependencies="libjpeg:libpng" ... &gt; </blockquote> <i>You will need
-entries named "libjpeg" and "libpng"</i>
-
+entries named "libjpeg" and "libpng" for this to work</i>
+<br/><br/>
 If you wish to use file lists, you will use 3 attributes : <i>path</i>, <i>file</i>, <i>symlinks</i>.
-<i>path</i> is here the library if located (e.g. /usr/local/lib/), <i>file</i> is the name of the library file, <i>symlinks</i> is a
-list sepered with colons (:) of all symlinks to this library file that exist.
+<i>path</i> is here the library if located (e.g. /usr/local/lib/), <i>file</i> is the name of the library file, <i>symlinks</i> is a list sepered with colons (:) of all symlinks to this library file that exist. <i>path</i> is optional if you already defined the path in &lt;search_path&gt;.
 
 <blockquote> &lt;library name="libfoo"  path="/usr/local/lib/" file="libfoo-1.2.12.0.dylib" symlinks="libfoo.dylib:libfoo.1.dylib:libfoo.1.2.dylib"/&gt; </blockquote>
 
 If you would rather use file search with criteria you will use (in addition to the &lt;search_path&gt; tag described above) 
 <i>starts_with</i>, <i>ends_with</i>, <i>contains</i>, <i>doesnt_contain</i>. <i>doesnt_contain</i>
-may contain multiple keywords seperated with colons (:). It will automatically select all
-library files and symlinks. Be careful that your description is precise enough so that it does
-not match libraries with similar names.
+may contain multiple keywords seperated with colons (:).
+It will automatically select all library files and symlinks matching the given criteria. Be careful that your description is precise enough so that it does
+not match multiple libraries with similar names.
 
 <blockquote> &lt;library name="libfoo"  starts_with="libfoo" ends_with=".dylib" doesnt_contain="foobar:food"/&gt;
 <i>would select libfoo files but not libfoobar nor libfood</i></blockquote>
 
 
 </blockquote>
+
 
 
 <br/><br/><br/><br/><br/><br/><br/><br/>
