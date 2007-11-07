@@ -137,14 +137,14 @@ void copyFile(string from, string to, bool override)
 	}
 }
 
-void copyLibFile(Library& lib, string to_path, string to_file, bool override)
+void prepareLibFile(bool copy, Library& lib, string to_path, string to_file, bool override)
 {
 	if( to_file.find(".dylib", 0) == string::npos )
 	{
 		to_file += ".dylib";
 	}
 	
-	copyFile( lib.path + lib.filename, to_path + to_file, override );
+	if(copy) copyFile( lib.path + lib.filename, to_path + to_file, override );
 	lib.new_path = to_path;
 	lib.new_filename = to_file;
 }

@@ -37,7 +37,7 @@ void fixLibDependency(Library& lib, string new_lib_name, string fix_this_file);
 void fixLibIdentity(Library& lib);
 
 void copyFile(string from, string to, bool override);
-void copyLibFile(Library& lib, string to_path, string to_file, bool override);
+void prepareLibFile(bool copy,Library& lib, string to_path, string to_file, bool override);
 
 void setInstallPath(string loc);
 

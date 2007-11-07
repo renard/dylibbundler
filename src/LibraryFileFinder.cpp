@@ -71,6 +71,24 @@ void startSearch()
 	}
 }
 
+// if you're not going to copy lib files, but only fix an executable, use this instead of 'fixLibs'
+void prepareLibData()
+{
+    Library_FileSearch* search;
+	for(int s=0; s<lib_file_searches.size(); s++)
+	{
+		search = lib_file_searches[s];
+		search->prepareLibs();
+	}
+    
+	Library_FileList* search2;
+	for(int s=0; s<lib_file_lists.size(); s++)
+	{
+		search2 = lib_file_lists[s];
+		search2->prepareLibs();
+	}
+}
+
 void fixLibs(string dest_folder, bool create, bool override_files, bool override_dir)
 {
 	if(override_dir) create=true;
@@ -118,14 +136,14 @@ void fixLibs(string dest_folder, bool create, bool override_files, bool override
 	for(int s=0; s<lib_file_searches.size(); s++)
 	{
 		search = lib_file_searches[s];
-		search->fixLibs(dest_folder, override_files);
+		search->prepareLibs(true, dest_folder, override_files);
 	}
 
 	Library_FileList* search2;
 	for(int s=0; s<lib_file_lists.size(); s++)
 	{
 		search2 = lib_file_lists[s];
-		search2->fixLibs(dest_folder, override_files);
+		search2->prepareLibs(true, dest_folder, override_files);
 	}
 
 	// ----------- correct inter-library dependencies ----------
@@ -150,6 +168,7 @@ void fixExecutable(string executable)
 	cout << "\n* Fixing executable " << executable << endl;
 	
 	Library_FileSearch* search;
+    if(lib_file_searches.size() == 0 and lib_file_lists.size() == 0) cerr << "\n\nWarning : no libraries specified" << std::endl;
 	for(int s=0; s<lib_file_searches.size(); s++)
 	{
 		search = lib_file_searches[s];
@@ -242,7 +261,7 @@ void LibraryFileFinder::checkFindingsValidity()
 	}	
 }
 
-void LibraryFileFinder::fixLibs(string dest_folder, bool override_files)
+void LibraryFileFinder::prepareLibs(bool copy, string dest_folder, bool override_files)
 {
 	checkFindingsValidity();
 	
@@ -255,8 +274,8 @@ void LibraryFileFinder::fixLibs(string dest_folder, bool override_files)
 	
 	cout << endl;
 	
-	copyLibFile( libraries[0], dest_folder, LibraryFileFinder::name, override_files );
-	fixLibIdentity( libraries[0] );
+        prepareLibFile( copy, libraries[0], dest_folder, LibraryFileFinder::name, override_files );
+        if(copy)  fixLibIdentity( libraries[0] );
 }
 
 void LibraryFileFinder::fixExecutable(string executable)

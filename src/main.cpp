@@ -24,6 +24,10 @@ using namespace std;
 using namespace irr;
 using namespace io;
 
+// FIXME - no error message when one of the binary files doesn't exist
+// FIXME - no error if you do something like -cmyfile instead of -c myfile
+// FIXME - fixing an executable without generating libs doesn't seem to work
+
 /*
 make it possible to fix this:
  
@@ -47,7 +51,7 @@ make it possible to fix this:
  *
  */
 
-const string VERSION = "0.2";
+const string VERSION = "0.25";
 
 #include "Library.h"
 #include "Utils.h"
@@ -283,6 +287,8 @@ int main (int argc, char * const argv[])
 	if(installPath.size() > 0) setInstallPath(installPath);
 	
 	if(fixLibs_bool) fixLibs(destfolder, create_dir, overwrite_files, overwrite_dir);
+    else prepareLibData();
+    
 	if(fixEx) fixExecutable(executable);
 	
     return 0;

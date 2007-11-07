@@ -41,7 +41,7 @@ public:
 	// used internally
 	string name;
 	LibraryFileFinder(const char* query_name);	
-	void fixLibs(string dest_folder, bool override_files);
+	void prepareLibs(bool copy=false, string dest_folder="", bool override_files=false);
 	void fixExecutable(string executable);
 	void checkFindingsValidity();
 	void findAndFixYourInterlibDeps();
@@ -88,6 +88,7 @@ void pushBackSearch(Library_FileSearch* search);
 
 void startSearch();
 
+void prepareLibData();
 void fixLibs(string dest_folder, bool create, bool override_files, bool override_dir);
 void fixExecutable(string executable);
 
