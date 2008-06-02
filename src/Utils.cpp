@@ -16,17 +16,18 @@
 
 
 #include "Utils.h"
-#include "Library.h"
+#include "Dependency.h"
+#include "Settings.h"
 #include <iostream>
+#include <stdio.h>
 #include <sys/stat.h>
 using namespace std;
 
-string path_to_libs_folder = string("@executable_path/../libs/");
-
+/*
 void setInstallPath(string loc)
 {
 	path_to_libs_folder = loc;
-}
+}*/
 
 void tokenize(const string& str, const char* delim, vector<string>* vectorarg)
 {
@@ -55,59 +56,32 @@ void tokenize(const string& str, const char* delim, vector<string>* vectorarg)
 }
 
 
-bool fileExists( const char *filename )
+bool fileExists( std::string filename )
 {
-	struct stat buffer ;
-	if ( stat( filename, &buffer ) == 0 ) return true;
-	return false;
+	//struct stat buffer ;
+	//if ( stat( filename, &buffer ) == 0 ) return true;
+	//return false;
+    
+    return system( (std::string("ls ")+filename+" > /dev/null").c_str() )==0;
 }
 
 void fixLibDependency(string old_lib_path, string new_lib_name, string target_file_name)
 {
 
-	string command = string("install_name_tool -change ") + old_lib_path + string(" ") + path_to_libs_folder + new_lib_name + string(" ") + target_file_name;
-	cout << command.c_str() << endl;
-	if( system( command.c_str() ) != 0 )
+	string command = string("install_name_tool -change ") + old_lib_path + string(" ") + Settings::inside_lib_path() + new_lib_name + string(" ") + target_file_name;
+	if( systemp( command ) != 0 )
 	{
 		cerr << "\n\nError : An error occured while trying to fix depency of " << old_lib_path << " in " << target_file_name << endl;
 		exit(1);
 	}
 }
 
-void fixLibDependency(Library& lib, string new_lib_name, string file_to_fix)
+void copyFile(string from, string to)
 {
-	string command = std::string("install_name_tool -change ") + lib.path + lib.filename + string(" ") + path_to_libs_folder + new_lib_name + string(" ") + file_to_fix;
-	cout << command.c_str() << endl;
-	if( system( command.c_str() ) != 0 )
-	{
-		cerr << "\n\nError : An error occured while trying to fix depency of " << new_lib_name << " in " << file_to_fix << endl;
-		exit(1);
-	}
-}
-
-void fixLibIdentity(Library& lib)
-{
-		
-	// tell each lib its new location
-	string command = string("install_name_tool -id ") + string(" ") + path_to_libs_folder + lib.new_filename + string(" ") + lib.new_path + lib.new_filename;
-	cout << command.c_str() << endl;
-	if( system( command.c_str() ) != 0 )
-	{
-		cerr << "\n\nError : An error occured while trying to change identity of library from " <<
-			(lib.path + lib.filename) << " to " << (path_to_libs_folder + lib.new_filename) << endl;
-		
-		exit(1);
-	}
-
-}
-
-
-void copyFile(string from, string to, bool override)
-{
-	
+	bool override = Settings::canOverwriteFiles();
 	if(!override)
 	{
-		if(fileExists( to.c_str() ))
+		if(fileExists( to ))
 		{
 			cerr << "\n\nError : File " << to.c_str() << " already exists. Remove it or enable overriding." << endl;
 			exit(1);
@@ -118,9 +92,7 @@ void copyFile(string from, string to, bool override)
 		
 	// copy file to local directory
 	string command = string("cp ") + override_permission + from + string(" ") + to;
-	cout << command.c_str() << endl;
-	
-	if( system( command.c_str() ) != 0 )
+	if( systemp( command ) != 0 )
 	{
 		cerr << "\n\nError : An error occured while trying to copy file " << from << " to " << to << endl;
 		exit(1);
@@ -128,23 +100,52 @@ void copyFile(string from, string to, bool override)
 	
 	// give it write permission
 	string command2 = string("chmod +w ") + to;
-	cout << command2.c_str() << endl;
-	
-	if( system( command2.c_str() ) != 0 )
+	if( systemp( command ) != 0 )
 	{
 		cerr << "\n\nError : An error occured while trying to set write permissions on file " << to << endl;
 		exit(1);
 	}
 }
 
-void prepareLibFile(bool copy, Library& lib, string to_path, string to_file, bool override)
+std::string system_get_output(std::string cmd)
 {
-	if( to_file.find(".dylib", 0) == string::npos )
-	{
-		to_file += ".dylib";
-	}
-	
-	if(copy) copyFile( lib.path + lib.filename, to_path + to_file, override );
-	lib.new_path = to_path;
-	lib.new_filename = to_file;
+    FILE * command_output;
+    char output[128];
+    int amount_read = 1;
+    
+    std::string full_output;
+    
+    try
+    {
+        command_output = popen(cmd.c_str(), "r");
+        if(command_output == NULL) throw;
+        
+        while(amount_read > 0)
+        {
+            amount_read = fread(output, 1, 127, command_output);
+            if(amount_read <= 0) break;
+            else
+            {
+                output[amount_read] = '\0';
+                full_output += output;
+            }
+        }
+    }
+    catch(...)
+    {
+        std::cerr << "An error occured while executing command " << cmd.c_str() << std::endl;
+        pclose(command_output);
+        return "";
+    }
+    
+    int return_value = pclose(command_output);
+    if(return_value != 0) return "";
+    
+    return full_output;
+}
+
+int systemp(std::string& cmd)
+{
+    std::cout << "    " << cmd.c_str() << std::endl;
+    return system(cmd.c_str());
 }

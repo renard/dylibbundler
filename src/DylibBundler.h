@@ -14,18 +14,13 @@
  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
-#ifndef _file_list_
-#define _file_list_
+#ifndef _crawler_
+#define _crawler_
 
 #include <string>
 
-class Library;
-
-using namespace std;
-
-void readFilesInPath(string path);
-int getFileAmount();
-Library& getFile(int id);
+void collectDependencies(std::string filename);
+void collectSubDependencies();
+void doneWithDeps_go();
 
 #endif

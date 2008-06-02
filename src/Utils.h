@@ -20,26 +20,18 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 
 class Library;
 
-void tokenize(const string& str, const char* delimiters, vector<string>*);
-bool fileExists( const char *filename );
+void tokenize(const std::string& str, const char* delimiters, std::vector<std::string>*);
+bool fileExists( std::string filename );
 
-// target_file_name can be a library as well as an executable
-// tells it where to look for that lib from now on
-// you can check the dependencies of a library or executable with "otool -L"
-void fixLibDependency(Library& lib, string new_lib_name, string fix_this_file);
+void copyFile(std::string from, std::string to);
 
-// tell each lib its new location
-// you can check the identity of a library with "otool -D"
-void fixLibIdentity(Library& lib);
+// executes a command in the native shell and returns output in string
+std::string system_get_output(std::string cmd);
 
-void copyFile(string from, string to, bool override);
-void prepareLibFile(bool copy,Library& lib, string to_path, string to_file, bool override);
-
-void setInstallPath(string loc);
-
+// like 'system', runs a command on the system shell, but also prints the command to stdout.
+int systemp(std::string& cmd);
 
 #endif

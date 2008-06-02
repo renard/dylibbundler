@@ -1,12 +1,15 @@
-all:
-	g++ -c -I./src ./src/FileList.cpp -o ./FileList.o
-	g++ -c -I./src ./src/irrXML.cpp -o ./irrXML.o
-	g++ -c -I./src ./src/Library.cpp -o ./Library.o
-	g++ -c -I./src ./src/LibraryFileFinder.cpp -o ./LibraryFileFinder.o
+dylibbundler:
+	g++ -c -I./src ./src/Settings.cpp -o ./Settings.o
+	g++ -c -I./src ./src/DylibBundler.cpp -o ./DylibBundler.o
+	g++ -c -I./src ./src/Dependency.cpp -o ./Dependency.o
 	g++ -c -I./src ./src/main.cpp -o ./main.o
 	g++ -c -I./src ./src/Utils.cpp -o ./Utils.o
-	g++ -o ./dylibbundler ./FileList.o ./irrXML.o ./Library.o ./LibraryFileFinder.o ./main.o ./Utils.o
-	rm *.o
+	g++ -o ./dylibbundler ./Settings.o ./DylibBundler.o ./Dependency.o ./main.o ./Utils.o
+
+clean:
+	rm -f *.o
+	rm -f ./dylibbundler
 	
-install:
+install: dylibbundler
 	cp ./dylibbundler /usr/local/bin/dylibbundler
+	chmod 775 /usr/local/bin/dylibbundler
