@@ -2,6 +2,7 @@
 <body>
 
 
+
 <center>
 <h2>mac dylib bundler</h2>
 
@@ -46,7 +47,7 @@ Here is a list of flags you can pass to dylibbundler on the terminal.<br/><br/>
 <blockquote>displays a summary of options</blockquote>
 
 -x, --fix-file (executable or plug-in filepath)
-<blockquote>Fixes given executable or plug-in file. Dylibbundler will walk through the dependencies of the specified file to build a dependency list. It will also fix the said files' dependencies so that it expects to find the libraries relative to itself (e.g. in the app bundle) instead of at an absolute path (e.g. /usr/local/lib). To pass multiple files to fix, simply specify multiple -x flags.</blockquote>
+<blockquote>Fixes given executable or plug-in file (a .dylib can work too. anything on which 'otool -L' works is accepted by -x). Dylibbundler will walk through the dependencies of the specified file to build a dependency list. It will also fix the said files' dependencies so that it expects to find the libraries relative to itself (e.g. in the app bundle) instead of at an absolute path (e.g. /usr/local/lib). To pass multiple files to fix, simply specify multiple -x flags.</blockquote>
 
 -b, --bundle-deps
 <blockquote>Copies libaries to a local directory, fixes their internal name so that they are aware of their new location,

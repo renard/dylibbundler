@@ -100,7 +100,7 @@ void copyFile(string from, string to)
 	
 	// give it write permission
 	string command2 = string("chmod +w ") + to;
-	if( systemp( command ) != 0 )
+	if( systemp( command2 ) != 0 )
 	{
 		cerr << "\n\nError : An error occured while trying to set write permissions on file " << to << endl;
 		exit(1);

@@ -27,7 +27,7 @@
  - could get mixed up if symlink and original are not in the same location (won't happen for UNIX prefixes like /usr/, but in random directories?)
  */
 
-const std::string VERSION = "0.3";
+const std::string VERSION = "0.3.1";
 
 
 // FIXME - no memory management is done at all (anyway the program closes immediately so who cares?)
