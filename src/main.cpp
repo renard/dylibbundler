@@ -23,8 +23,11 @@
 
 /*
  TODO
- - what happens if a library is not remembered by full apth but only name? (support improved, still not perfect)
+ - what happens if a library is not remembered by full path but only name? (support improved, still not perfect)
  - could get mixed up if symlink and original are not in the same location (won't happen for UNIX prefixes like /usr/, but in random directories?)
+ 
+ FIXME: why does it copy plugins i try to fix to the libs directory?
+ 
  */
 
 const std::string VERSION = "0.3.1";
