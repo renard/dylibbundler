@@ -58,11 +58,14 @@ void tokenize(const string& str, const char* delim, vector<string>* vectorarg)
 
 bool fileExists( std::string filename )
 {
-    //struct stat buffer ;
-    //if ( stat( filename, &buffer ) == 0 ) return true;
-    //return false;
-    
-    return system( (std::string("ls ")+filename+" > /dev/null").c_str() )==0;
+    if (access( filename.c_str(), F_OK ) != -1)
+    {
+        return true; // file exists
+    }
+    else
+    {
+        return false;// file doesn't exist
+    }
 }
 
 void fixLibDependency(string old_lib_path, string new_lib_name, string target_file_name)
