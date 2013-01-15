@@ -56,6 +56,7 @@ void tokenize(const string& str, const char* delim, vector<string>* vectorarg)
 }
 
 
+
 bool fileExists( std::string filename )
 {
     if (access( filename.c_str(), F_OK ) != -1)
@@ -64,7 +65,19 @@ bool fileExists( std::string filename )
     }
     else
     {
-        return false;// file doesn't exist
+        //std::cout << "access(filename) returned -1 on filename [" << filename << "] I will try trimming." << std::endl;
+        std::string delims = " \f\n\r\t\v";
+        std::string rtrimmed = filename.substr(0, filename.find_last_not_of(delims) + 1);
+        std::string ftrimmed = rtrimmed.substr(rtrimmed.find_first_not_of(delims));
+        if (access( ftrimmed.c_str(), F_OK ) != -1)
+        {
+            return true;
+        }
+        else
+        {
+            //std::cout << "Still failed. Cannot find the specified file." << std::endl;
+            return false;// file doesn't exist
+        }
     }
 }
 
