@@ -16,6 +16,7 @@
 
 #include "DylibBundler.h"
 #include <iostream>
+#include <cstdlib>
 #include "Utils.h"
 #include "Settings.h"
 #include "Dependency.h"

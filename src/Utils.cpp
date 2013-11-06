@@ -18,9 +18,12 @@
 #include "Utils.h"
 #include "Dependency.h"
 #include "Settings.h"
+#include <cstdlib>
+#include <unistd.h>
 #include <iostream>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <unistd.h>
 using namespace std;
 
 /*

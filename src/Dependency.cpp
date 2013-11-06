@@ -16,6 +16,8 @@
 
 #include "Dependency.h"
 #include <iostream>
+#include <cstdlib>
+#include <sys/param.h>
 #include "Utils.h"
 #include "Settings.h"
 
